@@ -61,7 +61,7 @@ var _ = AppsDescribe("Specifying a specific stack", func() {
 
 sleep 5
 
-cat /etc/lsb-release
+cat /etc/os-release
 
 sleep 10
 `,
@@ -88,7 +88,7 @@ config_vars:
   PATH: bin:/usr/local/bin:/usr/bin:/bin
   FROM_BUILD_PACK: "yes"
 default_process_types:
-  web: while true; do { echo -e 'HTTP/1.1 200 OK\r\n'; echo -e "\$(cat /etc/lsb-release)"; } | nc -q 1 -l \$PORT; done
+  web: while true; do { echo -e 'HTTP/1.1 200 OK\r\n'; echo -e "\$(cat /etc/os-release)"; } | nc -q 1 -l \$PORT; done
 EOF
 `,
 				},
@@ -130,10 +130,12 @@ EOF
 			for _, stackName := range stacks {
 				By(fmt.Sprintf("testing stack: %s", stackName))
 
-				var expectedLSBRelease string
+				var expectedReleaseName string
 				switch stackName {
 				case "cflinuxfs3":
-					expectedLSBRelease = "DISTRIB_CODENAME=bionic"
+					expectedReleaseName = "VERSION_CODENAME=bionic"
+				case "sle15":
+					expectedReleaseName = "CPE_NAME=\"cpe:/o:suse:sles:15"
 				}
 
 				push := cf.Cf("push", appName,
@@ -144,11 +146,11 @@ EOF
 					"-d", Config.GetAppsDomain(),
 				).Wait(Config.CfPushTimeoutDuration())
 				Expect(push).To(Exit(0))
-				Expect(push).To(Say(expectedLSBRelease))
+				Expect(push).To(Say(expectedReleaseName))
 
 				Eventually(func() string {
 					return helpers.CurlAppRoot(Config, appName)
-				}).Should(ContainSubstring(expectedLSBRelease))
+				}).Should(ContainSubstring(expectedReleaseName))
 			}
 		})
 	})
