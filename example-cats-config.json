@@ -1,12 +1,11 @@
-IN DEVELOPMENT
 {
-  "api": "api.DOMAIN.com",
-  "apps_domain": "DOMAIN.com",
+  "api": "api.172.17.0.2.omg.howdoi.website",
+  "apps_domain": "172.17.0.2.omg.howdoi.website",
   "admin_user": "admin",
-  "admin_password": "PASSWORD",
+  "admin_password": "password",
   "artifacts_directory": "logs",
   "skip_ssl_validation": true,
-  "timeout_scale": 1,
+  "timeout_scale": 4,
   "use_http": true,
   "use_log_cache": false,
   "include_apps": true,
@@ -15,6 +14,7 @@ IN DEVELOPMENT
   "include_container_networking": true,
   "credhub_mode" : "assisted",
   "credhub_client": "credhub_admin_client",
+  "credhub_secret": "credhub_secret",
   "include_detect": true,
   "include_docker": true,
   "include_internet_dependent": true,
@@ -37,6 +37,6 @@ IN DEVELOPMENT
   "include_credhub": true,
   "include_volume_services": false,
   "stacks": [
-    "cflinuxfs3"
+    "sle15"
   ]
 }

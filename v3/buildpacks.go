@@ -191,6 +191,10 @@ func createBuildpack() string {
 
 echo "STAGED WITH CUSTOM BUILDPACK"
 
+# Eirini loggregator bridge misses log lines when the init containers (opi-executor for example)
+# exit too quickly. This is a hacky workaround but we need a proper solution.
+sleep 5
+
 mkdir -p $1 $2
 if [ -f "$2/cached-file" ]; then
 cp $2/cached-file $1/content
